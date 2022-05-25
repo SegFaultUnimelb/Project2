@@ -6,6 +6,7 @@ import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.FileInputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -287,7 +288,7 @@ private void playRound() {
 	removeActor(trumpsActor);
 }
 
-  public Oh_Heaven()
+  public Oh_Heaven(Properties properties)
   {
 	super(700, 700, 30);
     setTitle("Oh_Heaven (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
@@ -322,14 +323,31 @@ private void playRound() {
 
   public static void main(String[] args)
   {
-	// System.out.println("Working Directory = " + System.getProperty("user.dir"));
-	final Properties properties;
+	 System.out.println("Working Directory = " + System.getProperty("user.dir"));
+	Properties properties;
 	if (args == null || args.length == 0) {
-	//  properties = PropertiesLoader.loadPropertiesFile(null);
+	  properties = PropertiesLoader.loadPropertiesFile("runmode.properties");
 	} else {
-	//      properties = PropertiesLoader.loadPropertiesFile(args[0]);
+	  properties = PropertiesLoader.loadPropertiesFile(args[0]);
 	}
-    new Oh_Heaven();
+	// get current_mode from properties file
+	String current_mode = properties.getProperty("current_mode");
+	if (current_mode == null) {
+	  System.out.println("No current_mode specified in properties file.");
+	  System.exit(0);
+	}
+	else{
+		System.out.println("current_mode = " + current_mode);
+		// Replace the properties file with the current_mode properties file
+		properties = PropertiesLoader.loadPropertiesFile(current_mode);
+	}
+	// print properties
+	System.out.println("properties = " + properties);
+	// get nbStartCards from properties file
+	int nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
+	  System.out.println("nbStartCards = " + nbStartCards);
+
+    new Oh_Heaven(properties);
   }
 
 }
