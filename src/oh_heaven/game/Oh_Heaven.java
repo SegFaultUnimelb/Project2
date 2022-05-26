@@ -168,8 +168,8 @@ public class Oh_Heaven extends CardGame {
 			hands[i].setTargetArea(new TargetArea(trickLocation));
 			hands[i].draw();
 		}
-		//	for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
-		//		hands[i].setVerso(true);			// You do not need to use or change this code.
+		for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
+			hands[i].setVerso(true);			// You do not need to use or change this code.
 		// End graphics
 	}
 
@@ -195,12 +195,10 @@ public class Oh_Heaven extends CardGame {
 			// Lead with selected card
 			if (players.get(nextPlayer) instanceof InteractivePlayer) {  // Select lead depending on player type
 				setStatus("Player 0 double-click on card to lead.");
-				selected = players.get(nextPlayer).playCard(round);
 			} else {
 				setStatusText("Player " + nextPlayer + " thinking...");
-				delay(thinkingTime);
-				selected = players.get(nextPlayer).playCard(round);
 			}
+			selected = players.get(nextPlayer).playCard(round);
 
 			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
 			trick.draw();
@@ -215,6 +213,7 @@ public class Oh_Heaven extends CardGame {
 			// update round information
 			round.cardPlayed(nextPlayer, selected);
 			round.setLead(lead);
+			round.setTrick(trick);
 			round.setWinner((winner));
 			round.setWinningCard(winningCard);
 			// End Lead
@@ -225,13 +224,10 @@ public class Oh_Heaven extends CardGame {
 
 				if (players.get(nextPlayer) instanceof InteractivePlayer) {  // Select lead depending on player type
 					setStatus("Player 0 double-click on card to lead.");
-					while (null == players.get(nextPlayer).playCard(round)) delay(100);
-					selected = players.get(nextPlayer).playCard(round);
 				} else {
 					setStatusText("Player " + nextPlayer + " thinking...");
-					delay(thinkingTime);
-					selected = players.get(nextPlayer).playCard(round);
 				}
+				selected = players.get(nextPlayer).playCard(round);
 
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
@@ -267,14 +263,15 @@ public class Oh_Heaven extends CardGame {
 					winningCard = selected;
 				}
 				round.cardPlayed(nextPlayer, selected);
-				round.setLead(lead);
+				round.setTrick(trick);
 				round.setWinner((winner));
 				round.setWinningCard(winningCard);
 				// End Follow
 			}
 			delay(600);
-			trick.setView(this, new RowLayout(hideLocation, 0));
-			trick.draw();
+			trick.removeAll(true);
+			//trick.setView(this, new RowLayout(hideLocation, 0));
+			//trick.draw();
 			nextPlayer = winner;
 			setStatusText("Player " + nextPlayer + " wins trick.");
 			scoreboard.trickUpdate(nextPlayer);
@@ -287,7 +284,7 @@ public class Oh_Heaven extends CardGame {
 		int i = 0;
 		PlayerFactory factory = new PlayerFactory();
 		for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)){
-			players.add(factory.getPlayer(type, i, this));
+			players.add(factory.getPlayer(type, i));
 			i++;
 		}
 	}
@@ -320,7 +317,7 @@ public class Oh_Heaven extends CardGame {
 		refresh();
 	}
 
-	public void callDelay(long time) {
+	public static void callDelay(long time) {
 		delay(time);
 	}
 
@@ -334,8 +331,16 @@ public class Oh_Heaven extends CardGame {
 
 		this.nbRounds = properties.getProperty("rounds") == null ? nbRounds :
 				Integer.parseInt(properties.getProperty("rounds"));
+
 		this.seed = properties.getProperty("seed") == null ? seed :
 				Integer.parseInt(properties.getProperty("seed"));
+
+		/*
+		this.nbPlayers = properties.getProperty("nbPlayers") == null ? nbStartCards :
+				Integer.parseInt(properties.getProperty("nbPlayers"));
+
+		 */
+
 	}
 
 	public static void main(String[] args)

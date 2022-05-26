@@ -10,11 +10,9 @@ public abstract class Player{
     // visibility, no need to getter and setter, infomation expert
     protected int index;
     protected Hand hand;
-    protected Oh_Heaven game;
 
-    public Player(int index, Oh_Heaven game){
+    public Player(int index){
         this.index = index;
-        this.game = game;
     }
 
     public abstract Card playCard(Round round);

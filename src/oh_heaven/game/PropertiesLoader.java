@@ -47,7 +47,9 @@ public class PropertiesLoader {
 
         for (int i = 0; i < nbPlayers; i++) {
             String playerType = properties.getProperty("players." + i);
-
+            if(playerType == null){
+                playerType = "legal";
+            }
             players.add(playerType);
         }
 

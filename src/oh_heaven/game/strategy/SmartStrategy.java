@@ -13,25 +13,40 @@ public class SmartStrategy implements IPlayStrategy{
 
     @Override
     public Card nextPlay(AIPlayer player, Round round) {
-        // legal play
-        if(round.getLead() ==null){
+        // randomly choose one as the lead
+        if(round.getLead() == null){
             return Oh_Heaven.randomCard(player.getHand());
         }
-        ArrayList<Card> sameSuitAsLead = player.getHand().getCardsWithSuit((round.getLead()));
 
-        // have same suit as lead
+        ArrayList<Card> sameSuitAsLead = player.getHand().getCardsWithSuit((round.getLead()));
+        ArrayList<Card> sameSuitAsTrump = player.getHand().getCardsWithSuit((round.getTrump()));
+
+        ArrayList<Card> leadSuitInTrick = round.getTrick().getCardsWithSuit((round.getLead()));
+        ArrayList<Card> TrumpSuitInTrick = round.getTrick().getCardsWithSuit((round.getTrump()));
+
+        // check whether there are card with lead suit
         if(sameSuitAsLead.size() > 0){
-            //
+            // with lead suit
+            // no one is larger than those already in trick >>> return the smallest one
+
+            // has one that is larger >>> randomly choose one from the available ones
+            return Oh_Heaven.randomCard(sameSuitAsLead);
+        }
+
+        // without lead suit
+        if(sameSuitAsTrump.size() > 0){
+            // with trump suit
+            // no one is larger than those already in trick  >>> return other suit
+
+            // has one that is larger >>> randomly choose one from the available ones
             return Oh_Heaven.randomCard(sameSuitAsLead);
         }
         else {
-            return Oh_Heaven.randomCard(player.getHand());
+            // no trump suit or no lead suit in hand
+            // choose the one with the least rank
+            player.getHand().sort(SortType.RANKPRIORITY, false);
+            return player.getHand().getFirst();
         }
 
-        // TODO: 如果肯定赢不了就出一张最小的，winning card比手牌都大，就出最小的
-        // player.getHand().sort(SortType.RANKPRIORITY, false);
-        // return player.getHand().getFirst();
-        // TODO: 跟trump一样比较大的手牌，可以出
-        // TODO: 当前这一轮最后一个人，在赢得基础上，出牌越小越好s
     }
 }

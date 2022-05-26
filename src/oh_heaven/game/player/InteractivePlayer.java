@@ -10,8 +10,8 @@ public class InteractivePlayer extends Player{
 
     private Card selected;
 
-    public InteractivePlayer(int index, Oh_Heaven game) {
-        super(index,game);
+    public InteractivePlayer(int index) {
+        super(index);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class InteractivePlayer extends Player{
         hand.setTouchEnabled(true);
 
         while(selected == null){
-            game.callDelay(100);
+            Oh_Heaven.callDelay(100);
         }
         // delay
 

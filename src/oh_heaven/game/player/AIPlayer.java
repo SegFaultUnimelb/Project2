@@ -11,10 +11,10 @@ import oh_heaven.game.strategy.*;
 public class AIPlayer extends Player{
 
     private IPlayStrategy playStrategy;
-
+    private final int thinkingTime = 2000;
     //Constructor
-    public AIPlayer(int index, Oh_Heaven game) {
-        super(index,game);
+    public AIPlayer(int index) {
+        super(index);
 
     }
 
@@ -24,6 +24,7 @@ public class AIPlayer extends Player{
 
     @Override
     public Card playCard(Round round) {
+        Oh_Heaven.callDelay(thinkingTime);
         return playStrategy.nextPlay(this, round);
     }
 }

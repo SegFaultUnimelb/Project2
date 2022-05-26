@@ -2,6 +2,7 @@ package oh_heaven.game;
 
 
 import ch.aplu.jcardgame.Card;
+import ch.aplu.jcardgame.Hand;
 import oh_heaven.game.Oh_Heaven.Suit;
 
 import java.util.ArrayList;
@@ -19,17 +20,14 @@ public class Round {
     private int winner;
     private Card winningCard;
     private Suit lead;
+    private Hand trick;
 
     private HashMap<Integer, HashSet<Card>> cardsPlayed;
-    private ArrayList<Integer> scores;
 
     public Round(Suit trump){
-
         this.trump = trump;
         this.cardsPlayed = new HashMap<>();
-        this.scores =  new ArrayList<>();
     }
-
 
 
 
@@ -65,20 +63,20 @@ public class Round {
         this.lead = lead;
     }
 
+    public Hand getTrick() {
+        return trick;
+    }
+
+    public void setTrick(Hand trick) {
+        this.trick = trick;
+    }
+
     public HashMap<Integer, HashSet<Card>> getCardsPlayed() {
         return cardsPlayed;
     }
 
     public void setCardsPlayed(HashMap<Integer, HashSet<Card>> cardsPlayed) {
         this.cardsPlayed = cardsPlayed;
-    }
-
-    public ArrayList<Integer> getScores() {
-        return scores;
-    }
-
-    public void setScores(ArrayList<Integer> scores) {
-        this.scores = scores;
     }
 
     public void cardPlayed(int player, Card playedCard){
