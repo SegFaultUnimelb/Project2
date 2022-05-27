@@ -4,7 +4,10 @@ package oh_heaven.game;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
+
 import oh_heaven.game.player.*;
+import oh_heaven.game.utility.PropertiesLoader;
+import oh_heaven.game.utility.ServiceRandom;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -28,26 +31,6 @@ public class Oh_Heaven extends CardGame {
 
 	final String trumpImage[] = {"bigspade.gif","bigheart.gif","bigdiamond.gif","bigclub.gif"};
 
-	static public int seed = 30006;
-	static final Random random = new Random(seed);
-
-	// return random Enum value
-	public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
-		int x = random.nextInt(clazz.getEnumConstants().length);
-		return clazz.getEnumConstants()[x];
-	}
-
-	// return random Card from Hand
-	public static Card randomCard(Hand hand){
-		int x = random.nextInt(hand.getNumberOfCards());
-		return hand.get(x);
-	}
-
-	// return random Card from ArrayList
-	public static Card randomCard(ArrayList<Card> list){
-		int x = random.nextInt(list.size());
-		return list.get(x);
-	}
 
 	private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer) {
 		Hand pack = deck.toHand(false);
@@ -55,7 +38,7 @@ public class Oh_Heaven extends CardGame {
 		for (int i = 0; i < nbCardsPerPlayer; i++) {
 			for (int j=0; j < nbPlayers; j++) {
 				if (pack.isEmpty()) return;
-				Card dealt = randomCard(pack);
+				Card dealt = ServiceRandom.randomCard(pack);
 				// System.out.println("Cards = " + dealt);
 				dealt.removeFromHand(false);
 				hands[j].insert(dealt, false);
@@ -66,6 +49,12 @@ public class Oh_Heaven extends CardGame {
 
 	public boolean rankGreater(Card card1, Card card2) {
 		return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
+	}
+
+
+
+	public static void callDelay(long time) {
+		delay(time);
 	}
 
 	private final String version = "1.0";
@@ -92,7 +81,6 @@ public class Oh_Heaven extends CardGame {
 
 	private final Location trickLocation = new Location(350, 350);
 	private final Location textLocation = new Location(350, 450);
-	private final int thinkingTime = 2000;
 	private Hand[] hands;
 	private Location hideLocation = new Location(-500, - 500);
 	private Location trumpsActorLocation = new Location(50, 50);
@@ -105,6 +93,7 @@ public class Oh_Heaven extends CardGame {
 
 	Font bigFont = new Font("Serif", Font.BOLD, 36);
 
+
 	public void update(int player, String text) {
 		if(scoreActors[player] != null){
 			removeActor(scoreActors[player]);
@@ -113,30 +102,6 @@ public class Oh_Heaven extends CardGame {
 		addActor(scoreActors[player], scoreLocations[player]);
 	}
 
-
-	private void initBids(Suit trumps, int nextPlayer) {
-		int total = 0;
-		int value;
-		for (int i = nextPlayer; i < nextPlayer + nbPlayers; i++) {
-			int iP = i % nbPlayers;
-			value = nbStartCards / 4 + random.nextInt(2);
-			scoreboard.bidUpdate(iP, value);
-			total += value;
-		}
-		if (total == nbStartCards) {  // Force last bid so not every bid possible
-			int iP = (nextPlayer + nbPlayers) % nbPlayers;
-			int prev = scoreboard.getBid(iP);
-			if (prev == 0) {
-				prev = 1;
-			} else {
-				prev += random.nextBoolean() ? -1 : 1;
-			}
-			scoreboard.bidUpdate(iP, prev);
-		}
-		// for (int i = 0; i < nbPlayers; i++) {
-		// 	 bids[i] = nbStartCards / 4 + 1;
-		//  }
-	}
 
 	private Card selected;
 
@@ -151,12 +116,6 @@ public class Oh_Heaven extends CardGame {
 		for (int i = 0; i < nbPlayers; i++) {
 			hands[i].sort(Hand.SortType.SUITPRIORITY, true);
 		}
-		// Set up human player for interaction
-		for (Player player : players){
-			if (player instanceof InteractivePlayer){
-				((InteractivePlayer) player).setupCardListener();
-			}
-		}
 
 		// graphics
 		RowLayout[] layouts = new RowLayout[nbPlayers];
@@ -168,17 +127,18 @@ public class Oh_Heaven extends CardGame {
 			hands[i].setTargetArea(new TargetArea(trickLocation));
 			hands[i].draw();
 		}
-		for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
-			hands[i].setVerso(true);			// You do not need to use or change this code.
+		//for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
+		//	hands[i].setVerso(true);			// You do not need to use or change this code.
 		// End graphics
 	}
 
 	private void playRound() {
 		// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class);
+		final Suit trumps = ServiceRandom.randomEnum(Suit.class);
 		final Actor trumpsActor = new Actor("sprites/" + trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
+
 		Round round = new Round(trumps);
 
 		Hand trick;
@@ -186,11 +146,11 @@ public class Oh_Heaven extends CardGame {
 		Card winningCard;
 		Suit lead;
 
-		int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
-		initBids(trumps, nextPlayer);
-		// initScore();
+		int nextPlayer = ServiceRandom.get().nextInt(nbPlayers); // randomly select player to lead for this round
+		scoreboard.initBids(nextPlayer, nbStartCards);
 		for (int i = 0; i < nbStartCards; i++) {
 			trick = new Hand(deck);
+
 			selected = null;
 			// Lead with selected card
 			if (players.get(nextPlayer) instanceof InteractivePlayer) {  // Select lead depending on player type
@@ -214,9 +174,12 @@ public class Oh_Heaven extends CardGame {
 			round.cardPlayed(nextPlayer, selected);
 			round.setLead(lead);
 			round.setTrick(trick);
-			round.setWinner((winner));
+			round.setWinner(winner);
 			round.setWinningCard(winningCard);
+
 			// End Lead
+
+
 
 			for (int j = 1; j < nbPlayers; j++) {
 				if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -233,6 +196,7 @@ public class Oh_Heaven extends CardGame {
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
+
 				// Check: Following card must follow suit if possible
 				if (selected.getSuit() != lead && hands[nextPlayer].getNumberOfCardsWithSuit(lead) > 0) {
 					// Rule violation
@@ -249,7 +213,11 @@ public class Oh_Heaven extends CardGame {
 					}
 				}
 				// End Check
+
+
+
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+
 				System.out.println("winning: " + winningCard);
 				System.out.println(" played: " + selected);
 				// System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " + (13 - winningCard.getRankId()));
@@ -262,17 +230,19 @@ public class Oh_Heaven extends CardGame {
 					winner = nextPlayer;
 					winningCard = selected;
 				}
+
 				round.cardPlayed(nextPlayer, selected);
 				round.setTrick(trick);
 				round.setWinner((winner));
 				round.setWinningCard(winningCard);
+
+
 				// End Follow
 			}
 			delay(600);
-			trick.removeAll(true);
-			//trick.setView(this, new RowLayout(hideLocation, 0));
-			//trick.draw();
-			nextPlayer = winner;
+			trick.setView(this, new RowLayout(hideLocation, 0));
+			trick.draw();
+			nextPlayer = winner ;
 			setStatusText("Player " + nextPlayer + " wins trick.");
 			scoreboard.trickUpdate(nextPlayer);
 		}
@@ -317,10 +287,6 @@ public class Oh_Heaven extends CardGame {
 		refresh();
 	}
 
-	public static void callDelay(long time) {
-		delay(time);
-	}
-
 	private void parseProperties(Properties properties){
 
 		this.nbStartCards = properties.getProperty("nbStartCards") == null ? nbStartCards :
@@ -332,8 +298,10 @@ public class Oh_Heaven extends CardGame {
 		this.nbRounds = properties.getProperty("rounds") == null ? nbRounds :
 				Integer.parseInt(properties.getProperty("rounds"));
 
-		this.seed = properties.getProperty("seed") == null ? seed :
-				Integer.parseInt(properties.getProperty("seed"));
+		String seedProp = properties.getProperty("seed");
+		Long seed = null;
+		if (seedProp != null) seed = Long.parseLong(seedProp);
+		ServiceRandom.initServicesRandom(seed);
 
 		/*
 		this.nbPlayers = properties.getProperty("nbPlayers") == null ? nbStartCards :

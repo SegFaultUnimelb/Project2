@@ -1,4 +1,4 @@
-package oh_heaven.game;
+package oh_heaven.game.utility;
 
 import java.io.FileInputStream;
 import java.io.IOException;

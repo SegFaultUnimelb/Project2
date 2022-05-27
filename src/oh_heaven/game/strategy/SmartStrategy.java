@@ -2,9 +2,9 @@ package oh_heaven.game.strategy;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand.SortType;
-import oh_heaven.game.Oh_Heaven;
 import oh_heaven.game.Round;
 import oh_heaven.game.player.AIPlayer;
+import oh_heaven.game.utility.ServiceRandom;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public class SmartStrategy implements IPlayStrategy{
     public Card nextPlay(AIPlayer player, Round round) {
         // randomly choose one as the lead
         if(round.getLead() == null){
-            return Oh_Heaven.randomCard(player.getHand());
+            return ServiceRandom.randomCard(player.getHand());
         }
 
         ArrayList<Card> sameSuitAsLead = player.getHand().getCardsWithSuit((round.getLead()));
@@ -30,7 +30,7 @@ public class SmartStrategy implements IPlayStrategy{
             // no one is larger than those already in trick >>> return the smallest one
 
             // has one that is larger >>> randomly choose one from the available ones
-            return Oh_Heaven.randomCard(sameSuitAsLead);
+            return ServiceRandom.randomCard(sameSuitAsLead);
         }
 
         // without lead suit
@@ -39,7 +39,7 @@ public class SmartStrategy implements IPlayStrategy{
             // no one is larger than those already in trick  >>> return other suit
 
             // has one that is larger >>> randomly choose one from the available ones
-            return Oh_Heaven.randomCard(sameSuitAsLead);
+            return ServiceRandom.randomCard(sameSuitAsLead);
         }
         else {
             // no trump suit or no lead suit in hand

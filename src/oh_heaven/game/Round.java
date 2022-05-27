@@ -4,8 +4,8 @@ package oh_heaven.game;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 import oh_heaven.game.Oh_Heaven.Suit;
+import oh_heaven.game.player.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -15,28 +15,28 @@ import java.util.HashSet;
  */
 public class Round {
 
-    private Suit trump;
+    private Suit trumps;
 
     private int winner;
     private Card winningCard;
     private Suit lead;
     private Hand trick;
 
+
     private HashMap<Integer, HashSet<Card>> cardsPlayed;
 
     public Round(Suit trump){
-        this.trump = trump;
+        this.trumps = trump;
         this.cardsPlayed = new HashMap<>();
     }
 
 
-
     public Suit getTrump() {
-        return trump;
+        return trumps;
     }
 
     public void setTrump(Suit trump) {
-        this.trump = trump;
+        this.trumps = trump;
     }
 
     public int getWinner() {
@@ -59,9 +59,7 @@ public class Round {
         return lead;
     }
 
-    public void setLead(Suit lead) {
-        this.lead = lead;
-    }
+    public void setLead(Suit lead) { this.lead = lead; }
 
     public Hand getTrick() {
         return trick;

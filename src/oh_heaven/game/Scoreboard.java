@@ -1,9 +1,16 @@
 package oh_heaven.game;
 
+import ch.aplu.jcardgame.CardGame;
+import ch.aplu.jgamegrid.*;
+
+import oh_heaven.game.utility.ServiceRandom;
+
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Scoreboard{
+
+public class Scoreboard extends CardGame {
     public final int madeBidBonus = 10;
 
     private int[] scores;
@@ -12,7 +19,17 @@ public class Scoreboard{
     private int nb;
     private Oh_Heaven game;
 
-    public Scoreboard(int nbPlayers,Oh_Heaven game) {
+    private final Location[] scoreLocations = {
+            new Location(575, 675),
+            new Location(25, 575),
+            new Location(575, 25),
+            // new Location(650, 575)
+            new Location(575, 575)
+    };
+    private Actor[] scoreActors = {null, null, null, null };
+    Font bigFont = new Font("Serif", Font.BOLD, 36);
+
+    public Scoreboard(int nbPlayers, Oh_Heaven game) {
         this.nb= nbPlayers;
         this.game = game;
         this.scores = new int[nbPlayers];
@@ -28,6 +45,7 @@ public class Scoreboard{
     public void trickUpdate(int player) {
         tricks[player]++;
         game.update(player,toText(player));
+        //update(player);
     }
 
     public void trickInitial(int player) {
@@ -35,14 +53,27 @@ public class Scoreboard{
         game.update(player,toText(player));
     }
 
-    public void bidUpdate(int player, int bid) {
-        bids[player] = bid;
-        game.update(player,toText(player));
+    public void initBids(int nextPlayer, int nbStartCards) {
+        int total = 0;
+        for (int i = nextPlayer; i < nextPlayer + nb; i++) {
+            int iP = i % nb;
+            bids[iP] = nbStartCards / 4 + ServiceRandom.get().nextInt(2);
+            total += bids[iP];
+        }
+        if (total == nbStartCards) {  // Force last bid so not every bid possible
+            int iP = (nextPlayer + nb) % nb;
+            if (bids[iP] == 0) {
+                bids[iP] = 1;
+            } else {
+                bids[iP] += ServiceRandom.get().nextBoolean() ? -1 : 1;
+            }
+        }
+
+        for (int i = 0; i < nb; i++) {
+            game.update(i, toText(i));
+        }
     }
 
-    public int getBid(int player) {
-        return bids[player];
-    }
 
     public void scoreUpdate() {
         for (int i = 0; i < nb; i++) {
@@ -64,6 +95,18 @@ public class Scoreboard{
         for (int i = 0; i <nb; i++) if (scores[i] == maxScore) winners.add(i);
         return winners;
     }
+/*
+    public void update(int player) {
+        if(scoreActors[player] != null){
+            removeActor(scoreActors[player]);
+        }
+
+        String text = "[" + String.valueOf(scores[player]) + "]" + String.valueOf(tricks[player]) + "/" + String.valueOf(bids[player]);
+        scoreActors[player] = new TextActor(text, Color.WHITE, bgColor, bigFont);
+        addActor(scoreActors[player], scoreLocations[player]);
+    }
+
+ */
 
 
 }

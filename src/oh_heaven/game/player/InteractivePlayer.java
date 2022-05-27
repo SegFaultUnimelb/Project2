@@ -3,6 +3,7 @@ package oh_heaven.game.player;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.CardAdapter;
 import ch.aplu.jcardgame.CardListener;
+import ch.aplu.jcardgame.Hand;
 import oh_heaven.game.Oh_Heaven;
 import oh_heaven.game.Round;
 
@@ -36,6 +37,11 @@ public class InteractivePlayer extends Player{
             public void leftDoubleClicked(Card card) { selected = card; hand.setTouchEnabled(false); }
         };
         hand.addCardListener(cardListener);
+    }
+
+    public void setHand(Hand hand) {
+        super.setHand(hand);
+        setupCardListener();
     }
 
 
