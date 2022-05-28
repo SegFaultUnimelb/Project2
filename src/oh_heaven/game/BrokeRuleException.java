@@ -5,7 +5,7 @@ package oh_heaven.game;
  */
 @SuppressWarnings("serial")
 public class BrokeRuleException extends Exception {
-	public BrokeRuleException(String violation) {
-		super(violation);
-	}
+    public BrokeRuleException(String violation) {
+        super(violation);
+    }
 }

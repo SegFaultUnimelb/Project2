@@ -8,13 +8,13 @@ import oh_heaven.game.utility.ServiceRandom;
 
 import java.util.ArrayList;
 
-public class SmartStrategy implements IPlayStrategy{
+public class SmartStrategy implements IPlayStrategy {
 
 
     @Override
     public Card nextPlay(AIPlayer player, Round round) {
         // randomly choose one as the lead
-        if(round.getLead() == null){
+        if (round.getLead() == null) {
             return ServiceRandom.randomCard(player.getHand());
         }
 
@@ -25,7 +25,7 @@ public class SmartStrategy implements IPlayStrategy{
         ArrayList<Card> TrumpSuitInTrick = round.getTrick().getCardsWithSuit((round.getTrump()));
 
         // check whether there are card with lead suit
-        if(sameSuitAsLead.size() > 0){
+        if (sameSuitAsLead.size() > 0) {
             // with lead suit
             // no one is larger than those already in trick >>> return the smallest one
 
@@ -34,14 +34,13 @@ public class SmartStrategy implements IPlayStrategy{
         }
 
         // without lead suit
-        if(sameSuitAsTrump.size() > 0){
+        if (sameSuitAsTrump.size() > 0) {
             // with trump suit
             // no one is larger than those already in trick  >>> return other suit
 
             // has one that is larger >>> randomly choose one from the available ones
             return ServiceRandom.randomCard(sameSuitAsLead);
-        }
-        else {
+        } else {
             // no trump suit or no lead suit in hand
             // choose the one with the least rank
             player.getHand().sort(SortType.RANKPRIORITY, false);

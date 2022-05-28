@@ -25,7 +25,7 @@ public class Round {
 
     private HashMap<Integer, HashSet<Card>> cardsPlayed;
 
-    public Round(Suit trump){
+    public Round(Suit trump) {
         this.trumps = trump;
         this.cardsPlayed = new HashMap<>();
     }
@@ -59,7 +59,9 @@ public class Round {
         return lead;
     }
 
-    public void setLead(Suit lead) { this.lead = lead; }
+    public void setLead(Suit lead) {
+        this.lead = lead;
+    }
 
     public Hand getTrick() {
         return trick;
@@ -77,10 +79,10 @@ public class Round {
         this.cardsPlayed = cardsPlayed;
     }
 
-    public void cardPlayed(int player, Card playedCard){
+    public void cardPlayed(int player, Card playedCard) {
         if (cardsPlayed.containsKey((player))) {
             cardsPlayed.get(player).add(playedCard);
-        } else{
+        } else {
             HashSet<Card> card = new HashSet<>();
             card.add(playedCard);
             cardsPlayed.put(player, card);

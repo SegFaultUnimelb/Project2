@@ -26,11 +26,11 @@ public class Scoreboard extends CardGame {
             // new Location(650, 575)
             new Location(575, 575)
     };
-    private Actor[] scoreActors = {null, null, null, null };
+    private Actor[] scoreActors = {null, null, null, null};
     Font bigFont = new Font("Serif", Font.BOLD, 36);
 
     public Scoreboard(int nbPlayers, Oh_Heaven game) {
-        this.nb= nbPlayers;
+        this.nb = nbPlayers;
         this.game = game;
         this.scores = new int[nbPlayers];
         this.tricks = new int[nbPlayers];
@@ -44,13 +44,13 @@ public class Scoreboard extends CardGame {
 
     public void trickUpdate(int player) {
         tricks[player]++;
-        game.update(player,toText(player));
+        game.update(player, toText(player));
         //update(player);
     }
 
     public void trickInitial(int player) {
         tricks[player] = 0;
-        game.update(player,toText(player));
+        game.update(player, toText(player));
     }
 
     public void initBids(int nextPlayer, int nbStartCards) {
@@ -79,7 +79,7 @@ public class Scoreboard extends CardGame {
         for (int i = 0; i < nb; i++) {
             scores[i] += tricks[i];
             if (tricks[i] == bids[i]) scores[i] += madeBidBonus;
-            game.update(i,toText(i));
+            game.update(i, toText(i));
         }
     }
 
@@ -88,11 +88,11 @@ public class Scoreboard extends CardGame {
         return text;
     }
 
-    public Set <Integer> getWinners(){
+    public Set<Integer> getWinners() {
         int maxScore = 0;
         Set<Integer> winners = new HashSet<Integer>();
-        for (int i = 0; i <nb; i++) if (scores[i] > maxScore) maxScore = scores[i];
-        for (int i = 0; i <nb; i++) if (scores[i] == maxScore) winners.add(i);
+        for (int i = 0; i < nb; i++) if (scores[i] > maxScore) maxScore = scores[i];
+        for (int i = 0; i < nb; i++) if (scores[i] == maxScore) winners.add(i);
         return winners;
     }
 /*

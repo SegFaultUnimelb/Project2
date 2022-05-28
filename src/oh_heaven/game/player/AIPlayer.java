@@ -8,17 +8,18 @@ import oh_heaven.game.strategy.*;
 /* Act as the context object in a strategy pattern structure
  */
 
-public class AIPlayer extends Player{
+public class AIPlayer extends Player {
 
     private IPlayStrategy playStrategy;
     private final int thinkingTime = 2000;
+
     //Constructor
     public AIPlayer(int index) {
         super(index);
 
     }
 
-    public void setPlayStrategy(IPlayStrategy strategy){
+    public void setPlayStrategy(IPlayStrategy strategy) {
         this.playStrategy = strategy;
     }
 
