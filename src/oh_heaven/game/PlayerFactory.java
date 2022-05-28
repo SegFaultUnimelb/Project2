@@ -5,7 +5,7 @@ import oh_heaven.game.strategy.*;
 
 public class PlayerFactory {
 
-    public Player getPlayer(String character, int idx){
+    public static Player getPlayer(String character, int idx){
         if(character.equals("human")){
             return new InteractivePlayer(idx);
         }else{

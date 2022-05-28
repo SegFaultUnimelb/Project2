@@ -2,7 +2,6 @@ package oh_heaven.game.player;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
-import oh_heaven.game.Oh_Heaven;
 import oh_heaven.game.Round;
 
 public abstract class Player{

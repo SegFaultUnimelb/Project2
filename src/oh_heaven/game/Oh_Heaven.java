@@ -5,7 +5,6 @@ package oh_heaven.game;
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
-import oh_heaven.game.player.*;
 import oh_heaven.game.utility.PropertiesLoader;
 import oh_heaven.game.utility.ServiceRandom;
 
@@ -47,11 +46,6 @@ public class Oh_Heaven extends CardGame {
 		}
 	}
 
-	public boolean rankGreater(Card card1, Card card2) {
-		return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
-	}
-
-
 
 	public static void callDelay(long time) {
 		delay(time);
@@ -84,12 +78,11 @@ public class Oh_Heaven extends CardGame {
 	private Hand[] hands;
 	private Location hideLocation = new Location(-500, - 500);
 	private Location trumpsActorLocation = new Location(50, 50);
-	private boolean enforceRules=false;
 
 	public void setStatus(String string) { setStatusText(string); }
 
-	private Scoreboard scoreboard = new Scoreboard(nbPlayers, this);
-	private List<Player> players = new ArrayList<>();
+	private Scoreboard scoreboard = Scoreboard.getInstance(nbPlayers, this);
+	private Round round;
 
 	Font bigFont = new Font("Serif", Font.BOLD, 36);
 
@@ -110,7 +103,7 @@ public class Oh_Heaven extends CardGame {
 		hands = new Hand[nbPlayers];
 		for (int i = 0; i < nbPlayers; i++) {
 			hands[i] = new Hand(deck);
-			players.get(i).setHand(hands[i]);
+			round.getPlayers().get(i).setHand(hands[i]);
 		}
 		dealingOut(hands, nbPlayers, nbStartCards);
 		for (int i = 0; i < nbPlayers; i++) {
@@ -134,129 +127,48 @@ public class Oh_Heaven extends CardGame {
 
 	private void playRound() {
 		// Select and display trump suit
-		final Suit trumps = ServiceRandom.randomEnum(Suit.class);
+		final Oh_Heaven.Suit trumps = ServiceRandom.randomEnum(Oh_Heaven.Suit.class);
 		final Actor trumpsActor = new Actor("sprites/" + trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
-
-		Round round = new Round(trumps);
+		round.init(trumps);
 
 		Hand trick;
-		int winner;
-		Card winningCard;
-		Suit lead;
-
 		int nextPlayer = ServiceRandom.get().nextInt(nbPlayers); // randomly select player to lead for this round
 		scoreboard.initBids(nextPlayer, nbStartCards);
 		for (int i = 0; i < nbStartCards; i++) {
 			trick = new Hand(deck);
-
-			selected = null;
-			// Lead with selected card
-			if (players.get(nextPlayer) instanceof InteractivePlayer) {  // Select lead depending on player type
-				setStatus("Player 0 double-click on card to lead.");
-			} else {
-				setStatusText("Player " + nextPlayer + " thinking...");
-			}
-			selected = players.get(nextPlayer).playCard(round);
-
-			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
-			trick.draw();
-			selected.setVerso(false);
-			// No restrictions on the card being lead
-			lead = (Suit) selected.getSuit();
-			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-			winner = nextPlayer;
-			winningCard = selected;
-			// End Lead
-
-			// update round information
-			round.cardPlayed(nextPlayer, selected);
-			round.setLead(lead);
 			round.setTrick(trick);
-			round.setWinner(winner);
-			round.setWinningCard(winningCard);
-
-			// End Lead
-
-
-
-			for (int j = 1; j < nbPlayers; j++) {
-				if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
+			for (int j = 0; j < nbPlayers; j++) {
+				if (nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
 
-				if (players.get(nextPlayer) instanceof InteractivePlayer) {  // Select lead depending on player type
+				if (!round.checkAuto(nextPlayer)) {  // Select lead depending on player type
 					setStatus("Player 0 double-click on card to lead.");
 				} else {
 					setStatusText("Player " + nextPlayer + " thinking...");
 				}
-				selected = players.get(nextPlayer).playCard(round);
+
+				//selected = players.get(nextPlayer).playCard(round);
+				selected = round.update(nextPlayer);  // update game conditions
 
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards() + 2) * trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
-
-				// Check: Following card must follow suit if possible
-				if (selected.getSuit() != lead && hands[nextPlayer].getNumberOfCardsWithSuit(lead) > 0) {
-					// Rule violation
-					String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
-					System.out.println(violation);
-					if (enforceRules) {
-						try {
-							throw (new BrokeRuleException(violation));
-						} catch (BrokeRuleException e) {
-							e.printStackTrace();
-							System.out.println("A cheating player spoiled the game!");
-							System.exit(0);
-						}
-					}
-				}
-				// End Check
-
-
-
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+				nextPlayer++;
 
-				System.out.println("winning: " + winningCard);
-				System.out.println(" played: " + selected);
-				// System.out.println("winning: suit = " + winningCard.getSuit() + ", rank = " + (13 - winningCard.getRankId()));
-				// System.out.println(" played: suit = " +    selected.getSuit() + ", rank = " + (13 -    selected.getRankId()));
-				if ( // beat current winner with higher card
-						(selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
-								// trumped when non-trump was winning
-								(selected.getSuit() == trumps && winningCard.getSuit() != trumps)) {
-					System.out.println("NEW WINNER");
-					winner = nextPlayer;
-					winningCard = selected;
-				}
-
-				round.cardPlayed(nextPlayer, selected);
-				round.setTrick(trick);
-				round.setWinner((winner));
-				round.setWinningCard(winningCard);
-
-
-				// End Follow
 			}
 			delay(600);
 			trick.setView(this, new RowLayout(hideLocation, 0));
 			trick.draw();
-			nextPlayer = winner ;
+			nextPlayer = round.getWinner() ;
 			setStatusText("Player " + nextPlayer + " wins trick.");
 			scoreboard.trickUpdate(nextPlayer);
+			round.endTrick();
 		}
 		removeActor(trumpsActor);
-	}
-
-	//
-	private void setupPlayers(Properties properties){
-		int i = 0;
-		PlayerFactory factory = new PlayerFactory();
-		for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)){
-			players.add(factory.getPlayer(type, i));
-			i++;
-		}
 	}
 
 	public Oh_Heaven(Properties properties)
@@ -266,14 +178,15 @@ public class Oh_Heaven extends CardGame {
 		setStatusText("Initializing...");
 
 		parseProperties(properties);
-		setupPlayers(properties);
+		round = new Round(properties, nbPlayers);
 
 		for (int i=0; i <nbRounds; i++) {
 			initRound();
 			playRound();
 			scoreboard.scoreUpdate();
 		};
-		Set <Integer> winners = scoreboard.getWinners();    String winText;
+		Set <Integer> winners = scoreboard.getWinners();
+		String winText;
 		if (winners.size() == 1) {
 			winText = "Game over. Winner is player: " +
 					winners.iterator().next();
@@ -291,9 +204,6 @@ public class Oh_Heaven extends CardGame {
 
 		this.nbStartCards = properties.getProperty("nbStartCards") == null ? nbStartCards :
 				Integer.parseInt(properties.getProperty("nbStartCards"));
-
-		this.enforceRules = properties.getProperty("enforceRules") == null ? enforceRules :
-				Boolean.parseBoolean(properties.getProperty("enforceRules"));
 
 		this.nbRounds = properties.getProperty("rounds") == null ? nbRounds :
 				Integer.parseInt(properties.getProperty("rounds"));
