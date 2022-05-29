@@ -6,22 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="cc806a63-4694-47dd-8888-443e73d0dae9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven$Rank.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven$Rank.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven$Suit.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven$Suit.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/Oh_Heaven.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/PlayerFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/PlayerFactory.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/Round.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/Round.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/Scoreboard.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/Scoreboard.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/player/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/player/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/oh_heaven/game/strategy/SmartStrategy.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/oh_heaven/game/strategy/SmartStrategy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/properties/runmode.properties" beforeDir="false" afterPath="$PROJECT_DIR$/properties/runmode.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/properties/smart.properties" beforeDir="false" afterPath="$PROJECT_DIR$/properties/smart.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/Oh_Heaven.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/Oh_Heaven.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/PlayerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/PlayerFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/Round.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/Round.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/Scoreboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/Scoreboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/player/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/player/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/oh_heaven/game/strategy/SmartStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/oh_heaven/game/strategy/SmartStrategy.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

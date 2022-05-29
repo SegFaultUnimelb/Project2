@@ -85,6 +85,7 @@ public class Oh_Heaven extends CardGame {
 	private Round round;
 
 	Font bigFont = new Font("Serif", Font.BOLD, 36);
+	private List<Integer> initPlayers = new ArrayList<>();
 
 
 	public void update(int player, String text) {
@@ -127,18 +128,25 @@ public class Oh_Heaven extends CardGame {
 
 	private void playRound() {
 		// Select and display trump suit
-		final Oh_Heaven.Suit trumps = ServiceRandom.randomEnum(Oh_Heaven.Suit.class);
+		final Oh_Heaven.Suit trumps = round.init();
 		final Actor trumpsActor = new Actor("sprites/" + trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
-		round.init(trumps);
 
 		Hand trick;
-		int nextPlayer = ServiceRandom.get().nextInt(nbPlayers); // randomly select player to lead for this round
+		int nextPlayer;
+
+		// randomly select player to lead for this round
+		if(initPlayers == null){
+			nextPlayer =ServiceRandom.get().nextInt(nbPlayers);
+		}else{
+			nextPlayer = initPlayers.get(0);
+			initPlayers.remove(0);
+		}
+
 		scoreboard.initBids(nextPlayer, nbStartCards);
 		for (int i = 0; i < nbStartCards; i++) {
 			trick = new Hand(deck);
-			round.setTrick(trick);
 			for (int j = 0; j < nbPlayers; j++) {
 				if (nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
@@ -149,7 +157,6 @@ public class Oh_Heaven extends CardGame {
 					setStatusText("Player " + nextPlayer + " thinking...");
 				}
 
-				//selected = players.get(nextPlayer).playCard(round);
 				selected = round.update(nextPlayer);  // update game conditions
 
 				// Follow with selected card
@@ -213,11 +220,15 @@ public class Oh_Heaven extends CardGame {
 		if (seedProp != null) seed = Long.parseLong(seedProp);
 		ServiceRandom.initServicesRandom(seed);
 
-		/*
-		this.nbPlayers = properties.getProperty("nbPlayers") == null ? nbStartCards :
-				Integer.parseInt(properties.getProperty("nbPlayers"));
-
-		 */
+		if (properties.getProperty("firstPlayer") != null) {
+			String initString = properties.getProperty("firstPlayer");
+			String[] initStrings = initString.split(",");
+			for (int j = 0; j < initStrings.length; j++) {
+				initPlayers.add(Integer.parseInt(initStrings[j]));
+			}
+		} else {
+			initPlayers = null;
+		}
 
 	}
 

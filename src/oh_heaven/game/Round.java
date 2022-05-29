@@ -2,11 +2,11 @@ package oh_heaven.game;
 
 
 import ch.aplu.jcardgame.Card;
-import ch.aplu.jcardgame.Hand;
 import oh_heaven.game.Oh_Heaven.Suit;
 import oh_heaven.game.player.*;
 import oh_heaven.game.utility.CardComparator;
 import oh_heaven.game.utility.PropertiesLoader;
+import oh_heaven.game.utility.ServiceRandom;
 
 import java.util.*;
 
@@ -16,45 +16,75 @@ import java.util.*;
  */
 public class Round {
 
-    /*
-    public boolean rankGreater(Card card1, Card card2) {
-        return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
-    }
-    
-     */
-
-
-    private Suit trumps;
+    private Suit trump;
 
     private int winner, currPlayer;
     private Card winningCard;
     private Card selected;
     private Suit lead;
-    private Hand trick;
     private boolean enforceRules = false;
-    private boolean leading;
+    private boolean leading;    // check whether this turn is to select a lead suit
+    private Properties properties;
 
+    private List<Suit> trumps = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
     private HashMap<Integer, HashSet<Card>> cardsPlayed;
 
     public Round(Properties properties, int nbPlayers){
+        this.properties =properties;
         this.enforceRules = properties.getProperty("enforceRules") == null ? enforceRules :
                 Boolean.parseBoolean(properties.getProperty("enforceRules"));
-        setupPlayers(properties, players, nbPlayers);
+        setupPlayers(nbPlayers);
+        setupTrumps();
     }
 
-    public void init(Suit trump){
-        this.trumps = trump;
+    // initiate a round
+    public Suit init(){
+        if(trumps == null){
+            this.trump = ServiceRandom.randomEnum(Oh_Heaven.Suit.class);
+        }else{
+            this.trump = trumps.get(0);
+            trumps.remove(0);
+        }
         this.cardsPlayed = new HashMap<>();
+        return trump;
     }
 
-    private void setupPlayers(Properties properties, List<Player> players, int nbPlayers){
+    // create
+    private void setupPlayers(int nbPlayers){
         int i = 0;
         PlayerFactory factory = new PlayerFactory();
         for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)){
             players.add(factory.getPlayer(type, i));
             i++;
         }
+    }
+
+    //create trump list for each round
+    void setupTrumps() {
+        if (properties.getProperty("trumps") != null) {
+            String trumpsString = properties.getProperty("trumps");
+            String[] trumpStrings = trumpsString.split(",");
+            for (int j = 0; j < trumpStrings.length; j++) {
+                trumps.add(Suit.valueOf(trumpStrings[j]));
+            }
+        } else {
+            trumps = null;
+        }
+    }
+
+    public Card update(int nextPlayer) {
+        selected = players.get(nextPlayer).playCard(this);
+        currPlayer = nextPlayer;
+        if(lead == null) {
+            this.lead = (Suit) selected.getSuit();
+            this.winner = nextPlayer;
+            this.winningCard = selected;
+        }
+        cardPlayed();
+        checkRuleViolation(); // check if this card follows the rule
+        checkWinner();  // check current winner of this trick
+        return selected;
     }
 
     public void checkRuleViolation() {
@@ -84,7 +114,7 @@ public class Round {
         if ( // beat current winner with higher card
                 (selected.getSuit() == winningCard.getSuit() && cmp.compare(selected, winningCard) > 0) ||
                         // trumped when non-trump was winning
-                        (selected.getSuit() == trumps && winningCard.getSuit() != trumps)) {
+                        (selected.getSuit() == trump && winningCard.getSuit() != trump)) {
             System.out.println("NEW WINNER");
             winner = currPlayer;
             winningCard = selected;
@@ -98,25 +128,12 @@ public class Round {
         winningCard = null;
     }
 
-    public Card update(int nextPlayer) {
-        selected = players.get(nextPlayer).playCard(this);
-        currPlayer = nextPlayer;
-        if(lead == null) {
-            this.lead = (Suit) selected.getSuit();
-            this.winner = nextPlayer;
-            this.winningCard = selected;
-        }
-        checkRuleViolation(); // check if this card follows the rule
-        checkWinner();  // check current winner of this trick
-        return selected;
-    }
-
     public boolean checkAuto(int nextPlayer) {
         return players.get(nextPlayer) instanceof AIPlayer;
     }
 
     public Suit getTrump() {
-        return trumps;
+        return trump;
     }
 
     public int getWinner() {
@@ -133,25 +150,17 @@ public class Round {
 
     public List<Player> getPlayers() {return players;}
 
-    public void setTrick(Hand trick) {
-        this.trick = trick;
-    }
-
     public HashMap<Integer, HashSet<Card>> getCardsPlayed() {
         return cardsPlayed;
     }
 
-    public void setCardsPlayed(HashMap<Integer, HashSet<Card>> cardsPlayed) {
-        this.cardsPlayed = cardsPlayed;
-    }
-
-    public void cardPlayed(int player, Card playedCard){
-        if (cardsPlayed.containsKey((player))) {
-            cardsPlayed.get(player).add(playedCard);
+    public void cardPlayed(){
+        if (cardsPlayed.containsKey((currPlayer))) {
+            cardsPlayed.get(currPlayer).add(selected);
         } else{
             HashSet<Card> card = new HashSet<>();
-            card.add(playedCard);
-            cardsPlayed.put(player, card);
+            card.add(selected);
+            cardsPlayed.put(currPlayer, card);
         }
     }
 }
