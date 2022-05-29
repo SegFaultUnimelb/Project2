@@ -19,7 +19,7 @@ public class SmartStrategy implements IPlayStrategy {
             return ServiceRandom.randomCard(player.getHand());
         }
 
-        Comparator cmp = new CardComparator();
+        Comparator<Card> cmp = new CardComparator();
         ArrayList<Card> sameSuitAsLead = player.getHand().getCardsWithSuit((round.getLead()));
         sameSuitAsLead.sort(cmp);
         ArrayList<Card> sameSuitAsTrump = player.getHand().getCardsWithSuit((round.getTrump()));

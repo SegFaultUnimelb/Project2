@@ -29,7 +29,6 @@ public class Round {
 
     private List<Suit> trumps = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
-    private Map<Integer, HashSet<Card>> cardsPlayed;
 
     public Round(Properties properties, int nbPlayers) {
         this.properties = properties;
@@ -47,7 +46,6 @@ public class Round {
             this.trump = trumps.get(0);
             trumps.remove(0);
         }
-        this.cardsPlayed = new HashMap<>();
         return trump;
     }
 
@@ -81,7 +79,6 @@ public class Round {
             this.winner = nextPlayer;
             this.winningCard = selected;
         }
-        cardPlayed();
         checkRuleViolation(); // check if this card follows the rule
         checkWinner();  // check current winner of this trick
         return selected;
@@ -110,7 +107,7 @@ public class Round {
     public void checkWinner() {
         System.out.println("winning: " + winningCard);
         System.out.println(" played: " + selected);
-        Comparator cmp = new CardComparator();
+        Comparator<Card> cmp = new CardComparator();
         if ( // beat current winner with higher card
                 (selected.getSuit() == winningCard.getSuit() && cmp.compare(selected, winningCard) > 0) ||
                         // trumped when non-trump was winning
@@ -152,17 +149,4 @@ public class Round {
         return players;
     }
 
-    public Map<Integer, HashSet<Card>> getCardsPlayed() {
-        return cardsPlayed;
-    }
-
-    public void cardPlayed() {
-        if (cardsPlayed.containsKey((currPlayer))) {
-            cardsPlayed.get(currPlayer).add(selected);
-        } else {
-            HashSet<Card> card = new HashSet<>();
-            card.add(selected);
-            cardsPlayed.put(currPlayer, card);
-        }
-    }
 }

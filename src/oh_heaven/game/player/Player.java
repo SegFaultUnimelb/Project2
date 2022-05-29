@@ -16,14 +16,6 @@ public abstract class Player {
 
     public abstract Card playCard(Round round);
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     public Hand getHand() {
         return hand;
     }
