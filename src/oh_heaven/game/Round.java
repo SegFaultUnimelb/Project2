@@ -54,9 +54,8 @@ public class Round {
     // create
     private void setupPlayers(int nbPlayers) {
         int i = 0;
-        PlayerFactory factory = new PlayerFactory();
         for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)) {
-            players.add(factory.getPlayer(type, i));
+            players.add(PlayerFactory.getPlayer(type, i));
             i++;
         }
     }
