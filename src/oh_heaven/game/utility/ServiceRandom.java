@@ -3,7 +3,7 @@ package oh_heaven.game.utility;
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ServiceRandom {
@@ -42,7 +42,7 @@ public class ServiceRandom {
     }
 
     // return random Card from ArrayList
-    public static Card randomCard(List<Card> list) {
+    public static Card randomCard(ArrayList<Card> list) {
         int x = random.nextInt(list.size());
         return list.get(x);
     }
