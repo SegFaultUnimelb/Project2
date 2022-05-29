@@ -20,8 +20,21 @@ public class Oh_Heaven extends CardGame {
     private static final int TRICK_WIDTH = 40;
     private static final String VERSION = "1.0";
     public static final int NB_PLAYERS = 4;
+    public int nbStartCards = 13;
+    public int nbRounds = 3;
 
     final String trumpImage[] = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
+    private Scoreboard scoreboard = Scoreboard.getInstance(NB_PLAYERS, this);
+    private Round round;
+
+    Font bigFont = new Font("Serif", Font.BOLD, 36);
+    private List<Integer> initPlayers = new ArrayList<>();
+    private Actor[] scoreActors = {null, null, null, null};
+
+    private final Location trickLocation = new Location(350, 350);
+    private final Location textLocation = new Location(350, 450);
+    private Location hideLocation = new Location(-500, -500);
+    private Location trumpsActorLocation = new Location(50, 50);
 
     public enum Suit {
         SPADES, HEARTS, DIAMONDS, CLUBS
@@ -54,9 +67,6 @@ public class Oh_Heaven extends CardGame {
         delay(time);
     }
 
-    public int nbStartCards = 13;
-    public int nbRounds = 3;
-
     private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
     private final Location[] handLocations = {
             new Location(350, 625),
@@ -71,23 +81,10 @@ public class Oh_Heaven extends CardGame {
             // new Location(650, 575)
             new Location(575, 575)
     };
-    private Actor[] scoreActors = {null, null, null, null};
-
-    private final Location trickLocation = new Location(350, 350);
-    private final Location textLocation = new Location(350, 450);
-    private Hand[] hands;
-    private Location hideLocation = new Location(-500, -500);
-    private Location trumpsActorLocation = new Location(50, 50);
 
     public void setStatus(String string) {
         setStatusText(string);
     }
-
-    private Scoreboard scoreboard = Scoreboard.getInstance(NB_PLAYERS, this);
-    private Round round;
-
-    Font bigFont = new Font("Serif", Font.BOLD, 36);
-    private List<Integer> initPlayers = new ArrayList<>();
 
 
     public void update(int player, String text) {
@@ -100,7 +97,7 @@ public class Oh_Heaven extends CardGame {
 
     private void initRound() {
         for (int j = 0; j < NB_PLAYERS; j++) scoreboard.trickInitial(j);
-        hands = new Hand[NB_PLAYERS];
+        Hand[] hands = new Hand[NB_PLAYERS];
         for (int i = 0; i < NB_PLAYERS; i++) {
             hands[i] = new Hand(deck);
             round.getPlayers().get(i).setHand(hands[i]);
