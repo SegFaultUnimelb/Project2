@@ -5,11 +5,10 @@ package oh_heaven.game;
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
-import oh_heaven.game.enums.Rank;
-import oh_heaven.game.enums.Suit;
+import oh_heaven.game.cards.Rank;
+import oh_heaven.game.cards.Suit;
 import oh_heaven.game.utility.PropertiesLoader;
 import oh_heaven.game.utility.ServiceRandom;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.util.*;

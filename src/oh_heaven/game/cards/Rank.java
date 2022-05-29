@@ -1,4 +1,4 @@
-package oh_heaven.game.enums;
+package oh_heaven.game.cards;
 
 public enum Rank {
     // Reverse order of rank importance (see rankGreater() below)

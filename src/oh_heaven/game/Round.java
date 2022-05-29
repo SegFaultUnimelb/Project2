@@ -2,7 +2,7 @@ package oh_heaven.game;
 
 
 import ch.aplu.jcardgame.Card;
-import oh_heaven.game.enums.Suit;
+import oh_heaven.game.cards.Suit;
 import oh_heaven.game.player.*;
 import oh_heaven.game.utility.CardComparator;
 import oh_heaven.game.utility.PropertiesLoader;
