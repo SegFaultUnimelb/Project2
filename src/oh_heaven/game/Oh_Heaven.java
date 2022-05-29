@@ -21,6 +21,8 @@ public class Oh_Heaven extends CardGame {
     private static final String VERSION = "1.0";
     public static final int NB_PLAYERS = 4;
 
+    final String trumpImage[] = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
+
     public enum Suit {
         SPADES, HEARTS, DIAMONDS, CLUBS
     }
@@ -30,8 +32,6 @@ public class Oh_Heaven extends CardGame {
         // Order of cards is tied to card images
         ACE, KING, QUEEN, JACK, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE, TWO
     }
-
-    final String trumpImage[] = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
 
 
     private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer) {
@@ -98,9 +98,6 @@ public class Oh_Heaven extends CardGame {
         addActor(scoreActors[player], scoreLocations[player]);
     }
 
-
-    private Card selected;
-
     private void initRound() {
         for (int j = 0; j < NB_PLAYERS; j++) scoreboard.trickInitial(j);
         hands = new Hand[NB_PLAYERS];
@@ -123,12 +120,13 @@ public class Oh_Heaven extends CardGame {
             hands[i].setTargetArea(new TargetArea(trickLocation));
             hands[i].draw();
         }
-        //for (int i = 1; i < nbPlayers; i++) // This code can be used to visually hide the cards in a hand (make them face down)
-        //	hands[i].setVerso(true);			// You do not need to use or change this code.
-        // End graphics
+        for (int i = 1; i < NB_PLAYERS; i++) // This code can be used to visually hide the cards in a hand (make them face down)
+            hands[i].setVerso(true);            // You do not need to use or change this code.
+//         End graphics
     }
 
     private void playRound() {
+        Card selected;
         // Select and display trump suit
         final Oh_Heaven.Suit trumps = round.init();
         final Actor trumpsActor = new Actor("sprites/" + trumpImage[trumps.ordinal()]);
