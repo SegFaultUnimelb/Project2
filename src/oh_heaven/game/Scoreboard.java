@@ -79,8 +79,7 @@ public class Scoreboard {
     }
 
     public String toText(int player) {
-        String text = "[" + String.valueOf(scores[player]) + "]" + String.valueOf(tricks[player]) + "/" + String.valueOf(bids[player]);
-        return text;
+        return "[" + (scores[player]) + "]" + (tricks[player]) + "/" + (bids[player]);
     }
 
     public Set<Integer> getWinners() {
