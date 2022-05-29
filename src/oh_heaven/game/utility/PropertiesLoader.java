@@ -13,7 +13,7 @@ public class PropertiesLoader {
 
     public static Properties loadPropertiesFile(String propertiesFile) {
         if (propertiesFile == null) {
-            try (InputStream input = new FileInputStream( DEFAULT_DIRECTORY_PATH + "runmode.properties")) {
+            try (InputStream input = new FileInputStream(DEFAULT_DIRECTORY_PATH + "runmode.properties")) {
 
                 Properties prop = new Properties();
 
@@ -47,7 +47,7 @@ public class PropertiesLoader {
 
         for (int i = 0; i < nbPlayers; i++) {
             String playerType = properties.getProperty("players." + i);
-            if(playerType == null){
+            if (playerType == null) {
                 playerType = "legal";
             }
             players.add(playerType);

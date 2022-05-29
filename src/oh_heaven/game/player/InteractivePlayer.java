@@ -7,7 +7,7 @@ import ch.aplu.jcardgame.Hand;
 import oh_heaven.game.Oh_Heaven;
 import oh_heaven.game.Round;
 
-public class InteractivePlayer extends Player{
+public class InteractivePlayer extends Player {
 
     private Card selected;
 
@@ -21,7 +21,7 @@ public class InteractivePlayer extends Player{
 
         hand.setTouchEnabled(true);
 
-        while(selected == null){
+        while (selected == null) {
             Oh_Heaven.callDelay(100);
         }
         // delay
@@ -30,11 +30,14 @@ public class InteractivePlayer extends Player{
         return selected;
     }
 
-    public void setupCardListener(){
+    public void setupCardListener() {
         // Set up human player for interaction
         CardListener cardListener = new CardAdapter()  // Human Player plays card
         {
-            public void leftDoubleClicked(Card card) { selected = card; hand.setTouchEnabled(false); }
+            public void leftDoubleClicked(Card card) {
+                selected = card;
+                hand.setTouchEnabled(false);
+            }
         };
         hand.addCardListener(cardListener);
     }

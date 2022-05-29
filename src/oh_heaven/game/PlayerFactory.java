@@ -5,12 +5,12 @@ import oh_heaven.game.strategy.*;
 
 public class PlayerFactory {
 
-    public static Player getPlayer(String type, int idx){
-        if(type.equals("human")){
+    public static Player getPlayer(String type, int idx) {
+        if (type.equals("human")) {
             return new InteractivePlayer(idx);
-        }else{
+        } else {
             AIPlayer newPlayer = new AIPlayer(idx);
-            switch(type){
+            switch (type) {
                 case "random":
                     newPlayer.setPlayStrategy(new RandomStrategy());
                     return newPlayer;

@@ -10,7 +10,7 @@ import javax.print.attribute.standard.PrinterMakeAndModel;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class LegalStrategy implements IPlayStrategy{
+public class LegalStrategy implements IPlayStrategy {
 
     public LegalStrategy() {
     }
@@ -18,15 +18,14 @@ public class LegalStrategy implements IPlayStrategy{
     @Override
     public Card nextPlay(AIPlayer player, Round round) {
         // legal play
-        if(round.getLead() ==null){
+        if (round.getLead() == null) {
             return ServiceRandom.randomCard(player.getHand());
         }
         ArrayList<Card> sameSuitAsLead = player.getHand().getCardsWithSuit((round.getLead()));
 
-        if(sameSuitAsLead.size() > 0){
+        if (sameSuitAsLead.size() > 0) {
             return ServiceRandom.randomCard(sameSuitAsLead);
-        }
-        else {
+        } else {
             return ServiceRandom.randomCard(player.getHand());
         }
     }

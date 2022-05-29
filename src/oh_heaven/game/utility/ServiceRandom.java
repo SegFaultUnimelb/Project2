@@ -9,7 +9,8 @@ import java.util.Random;
 public class ServiceRandom {
     private static Random random;
 
-    private ServiceRandom() {}
+    private ServiceRandom() {
+    }
 
     // class requires explicit initialisation and assumes usage of random is serialised
     public static void initServicesRandom(Long seed) {
@@ -29,19 +30,19 @@ public class ServiceRandom {
     }
 
     // return random Enum value
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
 
     // return random Card from Hand
-    public static Card randomCard(Hand hand){
+    public static Card randomCard(Hand hand) {
         int x = random.nextInt(hand.getNumberOfCards());
         return hand.get(x);
     }
 
     // return random Card from ArrayList
-    public static Card randomCard(ArrayList<Card> list){
+    public static Card randomCard(ArrayList<Card> list) {
         int x = random.nextInt(list.size());
         return list.get(x);
     }

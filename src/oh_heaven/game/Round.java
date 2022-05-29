@@ -30,8 +30,8 @@ public class Round {
     private List<Player> players = new ArrayList<>();
     private HashMap<Integer, HashSet<Card>> cardsPlayed;
 
-    public Round(Properties properties, int nbPlayers){
-        this.properties =properties;
+    public Round(Properties properties, int nbPlayers) {
+        this.properties = properties;
         this.enforceRules = properties.getProperty("enforceRules") == null ? enforceRules :
                 Boolean.parseBoolean(properties.getProperty("enforceRules"));
         setupPlayers(nbPlayers);
@@ -39,10 +39,10 @@ public class Round {
     }
 
     // initiate a round
-    public Suit init(){
-        if(trumps == null){
+    public Suit init() {
+        if (trumps == null) {
             this.trump = ServiceRandom.randomEnum(Oh_Heaven.Suit.class);
-        }else{
+        } else {
             this.trump = trumps.get(0);
             trumps.remove(0);
         }
@@ -51,10 +51,10 @@ public class Round {
     }
 
     // create
-    private void setupPlayers(int nbPlayers){
+    private void setupPlayers(int nbPlayers) {
         int i = 0;
         PlayerFactory factory = new PlayerFactory();
-        for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)){
+        for (String type : PropertiesLoader.loadPlayers(properties, nbPlayers)) {
             players.add(factory.getPlayer(type, i));
             i++;
         }
@@ -76,7 +76,7 @@ public class Round {
     public Card update(int nextPlayer) {
         selected = players.get(nextPlayer).playCard(this);
         currPlayer = nextPlayer;
-        if(lead == null) {
+        if (lead == null) {
             this.lead = (Suit) selected.getSuit();
             this.winner = nextPlayer;
             this.winningCard = selected;
@@ -148,16 +148,18 @@ public class Round {
         return lead;
     }
 
-    public List<Player> getPlayers() {return players;}
+    public List<Player> getPlayers() {
+        return players;
+    }
 
     public HashMap<Integer, HashSet<Card>> getCardsPlayed() {
         return cardsPlayed;
     }
 
-    public void cardPlayed(){
+    public void cardPlayed() {
         if (cardsPlayed.containsKey((currPlayer))) {
             cardsPlayed.get(currPlayer).add(selected);
-        } else{
+        } else {
             HashSet<Card> card = new HashSet<>();
             card.add(selected);
             cardsPlayed.put(currPlayer, card);
