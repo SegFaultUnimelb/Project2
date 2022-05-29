@@ -84,7 +84,7 @@ public class Scoreboard {
 
     public Set<Integer> getWinners() {
         int maxScore = 0;
-        Set<Integer> winners = new HashSet<Integer>();
+        Set<Integer> winners = new HashSet<>();
         for (int i = 0; i < nb; i++) if (scores[i] > maxScore) maxScore = scores[i];
         for (int i = 0; i < nb; i++) if (scores[i] == maxScore) winners.add(i);
         return winners;

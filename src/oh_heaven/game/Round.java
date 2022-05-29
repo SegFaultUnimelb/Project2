@@ -2,7 +2,7 @@ package oh_heaven.game;
 
 
 import ch.aplu.jcardgame.Card;
-import oh_heaven.game.Oh_Heaven.Suit;
+import oh_heaven.game.enums.Suit;
 import oh_heaven.game.player.*;
 import oh_heaven.game.utility.CardComparator;
 import oh_heaven.game.utility.PropertiesLoader;
@@ -41,7 +41,7 @@ public class Round {
     // initiate a round
     public Suit init() {
         if (trumps == null) {
-            this.trump = ServiceRandom.randomEnum(Oh_Heaven.Suit.class);
+            this.trump = ServiceRandom.randomEnum(Suit.class);
         } else {
             this.trump = trumps.get(0);
             trumps.remove(0);

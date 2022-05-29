@@ -5,6 +5,8 @@ package oh_heaven.game;
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
+import oh_heaven.game.enums.Rank;
+import oh_heaven.game.enums.Suit;
 import oh_heaven.game.utility.PropertiesLoader;
 import oh_heaven.game.utility.ServiceRandom;
 
@@ -29,29 +31,19 @@ public class Oh_Heaven extends CardGame {
 
     Font bigFont = new Font("Serif", Font.BOLD, 36);
     private List<Integer> initPlayers = new ArrayList<>();
-    private Actor[] scoreActors = {null, null, null, null};
+    private final Actor[] scoreActors = {null, null, null, null};
 
     private final Location trickLocation = new Location(350, 350);
     private final Location textLocation = new Location(350, 450);
     private final Location hideLocation = new Location(-500, -500);
     private final Location trumpsActorLocation = new Location(50, 50);
 
-    public enum Suit {
-        SPADES, HEARTS, DIAMONDS, CLUBS
-    }
 
-    public enum Rank {
-        // Reverse order of rank importance (see rankGreater() below)
-        // Order of cards is tied to card images
-        ACE, KING, QUEEN, JACK, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE, TWO
-    }
-
-
-    private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer) {
+    private void dealingOut(Hand[] hands, int nbCardsPerPlayer) {
         Hand pack = deck.toHand(false);
         // pack.setView(Oh_Heaven.this, new RowLayout(hideLocation, 0));
         for (int i = 0; i < nbCardsPerPlayer; i++) {
-            for (int j = 0; j < nbPlayers; j++) {
+            for (int j = 0; j < Oh_Heaven.NB_PLAYERS; j++) {
                 if (pack.isEmpty()) return;
                 Card dealt = ServiceRandom.randomCard(pack);
                 // System.out.println("Cards = " + dealt);
@@ -102,7 +94,7 @@ public class Oh_Heaven extends CardGame {
             hands[i] = new Hand(deck);
             round.getPlayers().get(i).setHand(hands[i]);
         }
-        dealingOut(hands, NB_PLAYERS, nbStartCards);
+        dealingOut(hands, nbStartCards);
         for (int i = 0; i < NB_PLAYERS; i++) {
             hands[i].sort(Hand.SortType.SUITPRIORITY, true);
         }
@@ -117,15 +109,15 @@ public class Oh_Heaven extends CardGame {
             hands[i].setTargetArea(new TargetArea(trickLocation));
             hands[i].draw();
         }
-        for (int i = 1; i < NB_PLAYERS; i++) // This code can be used to visually hide the cards in a hand (make them face down)
-            hands[i].setVerso(true);            // You do not need to use or change this code.
+//        for (int i = 1; i < NB_PLAYERS; i++) // This code can be used to visually hide the cards in a hand (make them face down)
+//            hands[i].setVerso(true);            // You do not need to use or change this code.
 //         End graphics
     }
 
     private void playRound() {
         Card selected;
         // Select and display trump suit
-        final Oh_Heaven.Suit trumps = round.init();
+        final Suit trumps = round.init();
         final Actor trumpsActor = new Actor("sprites/" + trumpImage[trumps.ordinal()]);
         addActor(trumpsActor, trumpsActorLocation);
         // End trump suit
@@ -218,8 +210,8 @@ public class Oh_Heaven extends CardGame {
         if (properties.getProperty("firstPlayer") != null) {
             String initString = properties.getProperty("firstPlayer");
             String[] initStrings = initString.split(",");
-            for (int j = 0; j < initStrings.length; j++) {
-                initPlayers.add(Integer.parseInt(initStrings[j]));
+            for (String string : initStrings) {
+                initPlayers.add(Integer.parseInt(string));
             }
         } else {
             initPlayers = null;
