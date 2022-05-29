@@ -18,16 +18,17 @@ public class Round {
 
     private Suit trump;
 
-    private int winner, currPlayer;
+    private int winner;
+    private int currPlayer;
     private Card winningCard;
     private Card selected;
     private Suit lead;
     private boolean enforceRules = false;
     private boolean leading;    // check whether this turn is to select a lead suit
-    private Properties properties;
+    private final Properties properties;
 
     private List<Suit> trumps = new ArrayList<>();
-    private List<Player> players = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
     private Map<Integer, HashSet<Card>> cardsPlayed;
 
     public Round(Properties properties, int nbPlayers) {
@@ -65,8 +66,8 @@ public class Round {
         if (properties.getProperty("trumps") != null) {
             String trumpsString = properties.getProperty("trumps");
             String[] trumpStrings = trumpsString.split(",");
-            for (int j = 0; j < trumpStrings.length; j++) {
-                trumps.add(Suit.valueOf(trumpStrings[j]));
+            for (String trumpString : trumpStrings) {
+                trumps.add(Suit.valueOf(trumpString));
             }
         } else {
             trumps = null;

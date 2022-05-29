@@ -6,8 +6,6 @@ import oh_heaven.game.Round;
 import oh_heaven.game.player.AIPlayer;
 import oh_heaven.game.utility.ServiceRandom;
 
-import javax.print.attribute.standard.PrinterMakeAndModel;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LegalStrategy implements IPlayStrategy {

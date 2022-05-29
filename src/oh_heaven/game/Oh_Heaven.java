@@ -19,13 +19,14 @@ public class Oh_Heaven extends CardGame {
     private static final int HAND_WIDTH = 400;
     private static final int TRICK_WIDTH = 40;
     private static final String VERSION = "1.0";
-    public static final int NB_PLAYERS = 4;
-    public int nbStartCards = 13;
-    public int nbRounds = 3;
+    private static final int NB_PLAYERS = 4;
+    private int nbStartCards = 13;
+    private int nbRounds = 3;
 
-    final String trumpImage[] = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
-    private Scoreboard scoreboard = Scoreboard.getInstance(NB_PLAYERS, this);
-    private Round round;
+    final String[] trumpImage = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
+
+    private final Scoreboard scoreboard = Scoreboard.getInstance(NB_PLAYERS, this);
+    private final Round round;
 
     Font bigFont = new Font("Serif", Font.BOLD, 36);
     private List<Integer> initPlayers = new ArrayList<>();
@@ -33,8 +34,8 @@ public class Oh_Heaven extends CardGame {
 
     private final Location trickLocation = new Location(350, 350);
     private final Location textLocation = new Location(350, 450);
-    private Location hideLocation = new Location(-500, -500);
-    private Location trumpsActorLocation = new Location(50, 50);
+    private final Location hideLocation = new Location(-500, -500);
+    private final Location trumpsActorLocation = new Location(50, 50);
 
     public enum Suit {
         SPADES, HEARTS, DIAMONDS, CLUBS
