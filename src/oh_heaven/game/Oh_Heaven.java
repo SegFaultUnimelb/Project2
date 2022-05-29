@@ -13,7 +13,6 @@ import java.awt.Font;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("serial")
 public class Oh_Heaven extends CardGame {
 
     private static final int HAND_WIDTH = 400;
@@ -146,9 +145,9 @@ public class Oh_Heaven extends CardGame {
         for (int i = 0; i < nbStartCards; i++) {
             trick = new Hand(deck);
             for (int j = 0; j < NB_PLAYERS; j++) {
-                if (nextPlayer >= NB_PLAYERS) nextPlayer = 0;  // From last back to first
-                selected = null;
-
+                if (nextPlayer >= NB_PLAYERS) {
+                    nextPlayer = 0;  // From last back to first
+                }
                 if (!round.checkAuto(nextPlayer)) {  // Select lead depending on player type
                     setStatus("Player 0 double-click on card to lead.");
                 } else {
