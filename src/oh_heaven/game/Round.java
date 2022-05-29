@@ -28,7 +28,7 @@ public class Round {
 
     private List<Suit> trumps = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
-    private HashMap<Integer, HashSet<Card>> cardsPlayed;
+    private Map<Integer, HashSet<Card>> cardsPlayed;
 
     public Round(Properties properties, int nbPlayers) {
         this.properties = properties;
@@ -152,7 +152,7 @@ public class Round {
         return players;
     }
 
-    public HashMap<Integer, HashSet<Card>> getCardsPlayed() {
+    public Map<Integer, HashSet<Card>> getCardsPlayed() {
         return cardsPlayed;
     }
 

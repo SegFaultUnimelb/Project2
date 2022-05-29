@@ -193,7 +193,6 @@ public class Oh_Heaven extends CardGame {
             playRound();
             scoreboard.scoreUpdate();
         }
-        ;
         Set<Integer> winners = scoreboard.getWinners();
         String winText;
         if (winners.size() == 1) {
